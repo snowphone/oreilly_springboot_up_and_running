@@ -1,42 +1,30 @@
 package ko.sixtyfive.coffee
 
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
-import org.springframework.http.HttpStatusCode
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/coffees")
-class RestApiDemoController {
-    private val coffees: MutableList<Coffee> = mutableListOf(
-        Coffee("Cafe Cereza"),
-        Coffee("Cafe Ganador"),
-        Coffee("Cafe Lareno"),
-        Coffee("Cafe Tres Pontas"),
-    )
-
+class RestApiDemoController(private val coffeeRepository: CoffeeRepository) {
     @GetMapping
-    fun getCoffees(): Iterable<Coffee> = this.coffees
+    fun getCoffees(): Iterable<Coffee> = this.coffeeRepository.findAll()
 
     @GetMapping("/{id}")
-    fun getCoffeeById(@PathVariable id: String) = this.coffees.firstOrNull { it.id == id }
+    fun getCoffeeById(@PathVariable id: String) = this.coffeeRepository.findByIdOrNull(id)
 
     @PostMapping
-    fun postCoffee(@RequestBody coffee: Coffee): Coffee = coffee.also {
-        coffees.add(it)
-    }
+    fun postCoffee(@RequestBody coffee: Coffee): Coffee = this.coffeeRepository.save(coffee)
 
     @PutMapping("/{id}")
-    fun putCoffee(@PathVariable id: String, @RequestBody coffee: Coffee) = coffees
-        .withIndex()
-        .firstOrNull { it.value.id == id }
-        ?.index
-        ?.let {
-            coffees[it] = coffee
-            ResponseEntity(coffee, HttpStatus.OK)
-        } ?: ResponseEntity(postCoffee(coffee), HttpStatus.CREATED)
+    fun putCoffee(@PathVariable id: String, @RequestBody coffee: Coffee) = if (this.coffeeRepository.existsById(id)) {
+        ResponseEntity(this.coffeeRepository.save(coffee), HttpStatus.OK)
+    } else {
+        ResponseEntity(this.coffeeRepository.save(coffee), HttpStatus.CREATED)
+    }
 
     @DeleteMapping("/{id}")
-    fun deleteCoffee(@PathVariable id: String) = coffees.removeIf { it.id == id }
+    fun deleteCoffee(@PathVariable id: String) = this.coffeeRepository.deleteById(id)
 
 }

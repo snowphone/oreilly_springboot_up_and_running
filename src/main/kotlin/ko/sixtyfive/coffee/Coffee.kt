@@ -1,8 +1,12 @@
 package ko.sixtyfive.coffee
 
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
 import java.util.UUID
 
+@Entity
 class Coffee {
+    @Id
     val id: String
     var name: String
 
