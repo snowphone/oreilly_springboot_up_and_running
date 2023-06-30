@@ -1,4 +1,4 @@
-package ko.sixtyfive.coffee
+package ko.sixtyfive
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

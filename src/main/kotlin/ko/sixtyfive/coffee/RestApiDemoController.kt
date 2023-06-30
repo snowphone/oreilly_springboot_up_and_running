@@ -1,5 +1,7 @@
 package ko.sixtyfive.coffee
 
+import ko.sixtyfive.coffee.Coffee
+import ko.sixtyfive.coffee.CoffeeRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
