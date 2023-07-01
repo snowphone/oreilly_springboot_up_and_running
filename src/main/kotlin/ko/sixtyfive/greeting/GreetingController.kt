@@ -7,12 +7,11 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/greeting")
-class GreetingController(
-    @Value("\${greeting-name: Mirage}")
-    @get:GetMapping
-    val name: String,
+class GreetingController(private val greeting: Greeting) {
 
-    @Value("\${greeting-coffee: \${greeting-name} is drinking Cafe Ganador}")
+    @get:GetMapping
+    val name: String get() = greeting.name
+
     @get:GetMapping("/coffee")
-    val coffee: String
-);
+    val coffee: String get() = greeting.coffee
+}
